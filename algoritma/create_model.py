@@ -10,14 +10,14 @@ from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 import matplotlib.pyplot as plt
 
 
-def create_model(Ticker):
+def create_model(Ticker, day):
     merged_data = pd.read_excel("DB_{}.xlsx".format(Ticker))
     keep_columns = ['Open', 'High', 'Low', 'Volume',
                     'Subjectivity', 'Polarity', 'Compound']
     all_input_values = merged_data[keep_columns].values  # numpy array.
 
     model_input = []
-    count_day = 5
+    count_day = day
 
     temp = []
     for i in range(0, len(all_input_values)-count_day):
@@ -92,6 +92,11 @@ def create_model(Ticker):
     model.fit(all_input_values_train, all_close_values_train,
               epochs=25, batch_size=16, verbose=1)
 
+    # modeli yakalıyor mu diye bir assertion oluşturmam gerekiyor. eğer modeli yakalamıyorsa bir save oluştursun
+    # eğer yakalıyorsa önceki modeli load etsin
+    # prediction'un performanslarını her bir iterasyonda data frame yazılabilir.
+    # standart sapması alınıp, diğer modellerle karşılaştırılabilir.
+    # Grid search
     model.save('./models/{}.h5'.format(Ticker))
     train_predict = model.predict(all_input_values_train)
     test_predict = model.predict(all_input_values_test)
@@ -136,9 +141,6 @@ def create_model(Ticker):
     prediction = model.predict(last_count_days)
     prediction2 = scaler2.inverse_transform(prediction)
 
-    model.save('{}.h5'.format(Ticker))  # creates a HDF5 file 'my_model.h5'
-    del model  # deletes the existing model
-
     print("prediction :", prediction2)
 
     plt.figure(figsize=(16, 8))
@@ -159,5 +161,6 @@ def create_model(Ticker):
     plt.show()
 
 
-# create_model("TSLA")
-# create_model("MSFT")
+# create_model("TSLA", 5)
+
+create_model("MSFT", 5)

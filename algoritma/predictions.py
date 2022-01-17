@@ -38,5 +38,5 @@ def make_prediction(model, day, file):
     return prediction
 
 
-# print(make_prediction('MSFT.h5', 5, 'DB_MSFT.xlsx'))
-# print(make_prediction("TSLA.h5", 5, "DB_TSLA.xlsx"))
+print(make_prediction('MSFT.h5', 5, 'DB_MSFT.xlsx'))
+#print(make_prediction("TSLA.h5", 5, "DB_TSLA.xlsx"))
